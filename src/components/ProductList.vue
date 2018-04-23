@@ -1,10 +1,7 @@
 <template>
     <div>
       <h1>Lista de Produtos</h1>
-      <img
-        v-if="loading"
-        src="https://i.imgur.com/JfPpwOA.gif"
-      >
+      <img v-if="loading" src="https://i.imgur.com/JfPpwOA.gif">
       <ul v-else>
         <li v-for="product in products">
           {{product.title}} - {{product.price}} | {{product.inventory}}
