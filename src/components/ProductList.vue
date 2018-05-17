@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Lista de Produtos</h1>
+      <h1>Product List</h1>
       <img
         v-if="loading"
         src="https://i.imgur.com/JfPpwOA.gif"
@@ -10,39 +10,45 @@
           {{product.title}} - {{product.price | currency}} - {{product.inventory}}
           <button
             :disabled="!productIsInStock(product)"
-            @click="addProductToCart(product)">Adicionar ao carrinho</button>
+            @click="addProductToCart(product)"
+          >Add to cart</button>
         </li>
       </ul>
     </div>
 </template>
 
 <script>
-
+  import {mapState, mapGetters, mapActions} from 'vuex'
   export default {
     data () {
       return {
-        loading: false
+        loading: false,
+        productIndex: 1
       }
     },
 
     computed: {
-      products () {
-        return this.$store.state.products
-      },
-      productIsInStock (){
-        return this.$store.getters.productIsInStock
-      }
+      localComputed () { /* ... */ },
+
+      ...mapState({
+        products: state => state.products.items
+      }),
+
+      ...mapGetters({
+        productIsInStock: 'productIsInStock'
+      })
     },
 
     methods: {
-      addProductToCart (product) {
-        this.$store.dispatch('addProductToCart', product)
-      }
+      ...mapActions({
+        fetchProducts: 'fetchProducts',
+        addProductToCart: 'addProductToCart'
+      })
     },
 
     created () {
       this.loading = true
-      this.$store.dispatch('fetchProducts')
+      this.fetchProducts()
         .then(() => this.loading = false)
     }
   }
